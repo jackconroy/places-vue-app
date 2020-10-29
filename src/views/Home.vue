@@ -10,28 +10,39 @@
       Image Url: <input type="text" v-model="newPlaceImage" /><br />
       <button v-on:click="createPlace()">Add Place</button>
     </div>
-    <div v-for="place in places">
-      <br />
-      <h2>{{ place.name }}</h2>
-      <p>{{ place.address }}</p>
-      <img :src="place.image" alt="" /><br />
-      <button v-on:click="showPlace(place)">Details!</button>
+    <br /><br />
+    <div>
+      <button>Sort Alphabetically</button>
     </div>
-    <dialog id="place-details">
-      <form method="dialog">
-        <h2>Details</h2>
-        <ul>
-          <li v-for="error in errors">{{ error }}</li>
-        </ul>
-        Name <input type="text" v-model="currentPlace.name" /><br />
-        Address <input type="text" v-model="currentPlace.address" /><br />
-        Image Url <input type="text" v-model="currentPlace.image" /><br />
-        <button v-on:click="updatePlace(currentPlace)">Update Place!</button>
-        <button v-on:click="destroyPlace(currentPlace)">Destroy Place!</button
-        ><br />
-        <button>Close!</button>
-      </form>
-    </dialog>
+    <div v-for="place in orderBy(places, 'name')">
+      <br /><br />
+      Search by name: <input v-model="nameFilter" list="names" />
+      <datalist id="names">
+        <option v-for="place in places">{{ place.name }}</option>
+      </datalist>
+      <div v-for="place in places">
+        <br />
+        <h2>{{ place.name }}</h2>
+        <p>{{ place.address }}</p>
+        <img :src="place.image" alt="" /><br />
+        <button v-on:click="showPlace(place)">Details!</button>
+      </div>
+      <dialog id="place-details">
+        <form method="dialog">
+          <h2>Details</h2>
+          <ul>
+            <li v-for="error in errors">{{ error }}</li>
+          </ul>
+          Name <input type="text" v-model="currentPlace.name" /><br />
+          Address <input type="text" v-model="currentPlace.address" /><br />
+          Image Url <input type="text" v-model="currentPlace.image" /><br />
+          <button v-on:click="updatePlace(currentPlace)">Update Place!</button>
+          <button v-on:click="destroyPlace(currentPlace)">Destroy Place!</button
+          ><br />
+          <button>Close!</button>
+        </form>
+      </dialog>
+    </div>
   </div>
 </template>
 
@@ -39,10 +50,13 @@
 
 <script>
 import axios from "axios";
+import Vue2Filters from "vue2-filters";
 
 export default {
+  mixins: [Vue2Filters.mixin],
   data: function() {
     return {
+      nameFilter: "",
       message: "Check out our places!",
       places: [],
       currentPlace: {},

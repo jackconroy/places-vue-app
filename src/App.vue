@@ -6,9 +6,13 @@
       <router-link to="/placesShow">Show</router-link> |
       <router-link to="/places/new">New Place</router-link> |
       <router-link to="/placesEdit">Edit</router-link> |
-      <router-link to="/signup">Signup</router-link> |
-      <router-link to="/login">Login</router-link> |
-      <router-link to="/logout">Logout</router-link>
+      <span v-if="isLoggedIn()">
+        <router-link to="/logout">Logout</router-link> |
+      </span>
+      <span v-else>
+        <router-link to="/signup">Signup</router-link> |
+        <router-link to="/login">Login</router-link> |
+      </span>
     </div>
     <router-view />
   </div>
@@ -36,3 +40,20 @@
   color: #42b983;
 }
 </style>
+
+<script>
+import axios from "axios";
+export default {
+  data: function() {
+    return {
+      place: {},
+    };
+  },
+  created: function() {},
+  methods: {
+    isLoggedIn: function() {
+      return localStorage.getItem("jwt");
+    },
+  },
+};
+</script>
